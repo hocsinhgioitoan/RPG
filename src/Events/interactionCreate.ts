@@ -31,6 +31,15 @@ export default {
                     ephemeral: true,
                 });
             }
+        } else if (interaction.isAutocomplete()) {
+            if (!interaction.inCachedGuild()) return;
+            const cmd = client.commands.get(interaction.commandName);
+            if (!cmd) return;
+            try {
+                await cmd.autocomplete?.(client, interaction);
+            } catch (error) {
+                console.error(error);
+            }
         }
     },
 } as TEvent<"interactionCreate">;

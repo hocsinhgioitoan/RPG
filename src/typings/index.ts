@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, ClientEvents, ModalSubmitInteraction, SlashCommandBuilder} from "discord.js";
+import { AutocompleteInteraction, ChatInputCommandInteraction, ClientEvents, ModalSubmitInteraction, SlashCommandBuilder} from "discord.js";
 import NullClient from '../Class/Client';
 
 export type events = keyof ClientEvents;
@@ -12,8 +12,9 @@ export interface TSlashCommand {
     name: string;
     description: string;
     type: TSlashCommandType;
-    data: SlashCommandBuilder;
+    data: Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
     run: (client: NullClient, interaction: ChatInputCommandInteraction<'cached'>) => void;
+    autocomplete?: (client: NullClient, interaction: AutocompleteInteraction<'cached'>) => void;
 }
 
 export interface TInteraction<T> {
