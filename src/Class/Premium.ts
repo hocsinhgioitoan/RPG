@@ -1,6 +1,7 @@
 import { Database } from "quickmongo";
 
 export class Premium {
+    // eslint-disable-next-line no-empty-function
     constructor(protected db: Database) {}
 
     async func(id: string, guildsOrUsers: "guilds" | "users") {
@@ -38,5 +39,3 @@ interface plan {
     type: string;
     date: number;
 }
-
-
