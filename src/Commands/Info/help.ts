@@ -39,9 +39,9 @@ export default {
                 }),
             })
             .setTitle("Tin mới");
-        if (message?.embeds?.length ||0> 0) emb = EmbedBuilder.from(message?.embeds[0]!);
+        if (message?.embeds?.length || 0 > 0)
+            emb = EmbedBuilder.from(message?.embeds[0]!);
         else emb = _emb.setDescription(fixedContent || "Không có tin mới");
-        console.log(emb)
         if (focusedOption) {
             const cmd = client.commands.get(focusedOption);
             if (!cmd)

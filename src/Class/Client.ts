@@ -18,7 +18,8 @@ export default class NullClient<
     funcs: typeof func = func;
     db!: Database;
     commands: Collection<string, TSlashCommand> = new Collection();
-    interactions: Collection<string, TInteraction<Interaction>> = new Collection();
+    interactions: Collection<string, TInteraction<Interaction>> =
+        new Collection();
     constructor() {
         super({
             intents: [intent.GuildMembers, intent.Guilds],
@@ -39,29 +40,12 @@ export default class NullClient<
                     ],
                 });
             })
-            .then(() => {
-                return this.funcs.sendWH({
-                    embeds: [
-                        {
-                            description: "Đăng nhập thành công",
-                            color: Colors.Green,
-                        },
-                    ],
-                });
-            });
+            .then(() => {});
     }
 
     async loadDatabase() {
         const db = new Database(process.env[`${process.env.mode}_mongo`]!);
         db.on("ready", (_db) => {
-            this.funcs.sendWH({
-                embeds: [
-                    {
-                        description: "Kết nối database thành công",
-                        color: Colors.Green,
-                    },
-                ],
-            });
             this.db = _db;
         });
         db.on("error", () => {
@@ -75,7 +59,7 @@ export default class NullClient<
             });
         });
 
-        db.connect();
+        await db.connect();
         return true;
     }
 
@@ -136,15 +120,15 @@ export default class NullClient<
                 join(__dirname, "..", "Interactions", folder)
             );
             for (const interaction of interactions) {
-                const { default: Interaction }: { default: TInteraction<Interaction> } =
-                    await import(
-                        join(__dirname, "..", "Interactions", folder, interaction)
-                    );
+                const {
+                    default: Interaction,
+                }: { default: TInteraction<Interaction> } = await import(
+                    join(__dirname, "..", "Interactions", folder, interaction)
+                );
                 this.interactions.set(Interaction.name, Interaction);
                 console.log(`Loaded ${Interaction.name} interaction`);
             }
         }
         return true;
     }
-
 }
