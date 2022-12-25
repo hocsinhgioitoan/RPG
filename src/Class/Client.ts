@@ -93,12 +93,19 @@ export default class NullClient<
     }
 
     async loadCommands() {
-        const commands = readdirSync(join(__dirname, "..", "Commands"));
-        for (const command of commands) {
-            const { default: Command }: { default: TSlashCommand } =
-                await import(join(__dirname, "..", "Commands", command));
-            this.commands.set(Command.name, Command);
-            console.log(`Loaded ${Command.name} command`);
+        const folders = readdirSync(join(__dirname, "..", "Commands"));
+        for (const folder of folders) {
+            const commands = readdirSync(
+                join(__dirname, "..", "Commands", folder)
+            );
+            for (const command of commands) {
+                const { default: Command }: { default: TSlashCommand } =
+                    await import(
+                        join(__dirname, "..", "Commands", folder, command)
+                    );
+                this.commands.set(Command.name, Command);
+                console.log(`Loaded ${Command.name} command`);
+            }
         }
         console.log("Done loading commands!");
         return true;

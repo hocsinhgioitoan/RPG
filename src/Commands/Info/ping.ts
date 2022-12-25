@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "discord.js";
-import { TSlashCommand, TSlashCommandType } from "../typings";
+import { TSlashCommand, TSlashCommandType } from "../../typings";
 
 export default {
     name: "ping",

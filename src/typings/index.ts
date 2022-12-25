@@ -18,4 +18,5 @@ export interface TSlashCommand {
 
 export enum TSlashCommandType {
     INFO = 'info',
+    MISC = 'misc',
 }
