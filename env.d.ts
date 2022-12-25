@@ -9,6 +9,7 @@ declare global {
             host_webhook?: string;
             // local or host
             mode?: "local" | "host";
+            devGuild?: string;
         }
     }
 }
