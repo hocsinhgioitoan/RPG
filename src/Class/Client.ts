@@ -5,12 +5,14 @@ import {
     Colors,
     Collection,
     Interaction,
+    ApplicationCommandPermissionType,
 } from "discord.js";
 import * as func from "../utils/functions";
 import { Database } from "quickmongo";
 import { readdirSync } from "fs";
 import { join } from "path";
 import { TEvent, TInteraction, TSlashCommand, events } from "../typings";
+import { Premium } from './Premium';
 // Export Client
 export default class NullClient<
     Ready extends boolean = boolean
@@ -20,10 +22,12 @@ export default class NullClient<
     commands: Collection<string, TSlashCommand> = new Collection();
     interactions: Collection<string, TInteraction<Interaction>> =
         new Collection();
+    premium: Premium
     constructor() {
         super({
             intents: [intent.GuildMembers, intent.Guilds],
         });
+        this.premium = new Premium(this.db)
     }
 
     async build(token?: string) {
