@@ -1,9 +1,10 @@
 import { SlashCommandBuilder } from "discord.js";
-import { TSlashCommand } from "../typings";
+import { TSlashCommand, TSlashCommandType } from "../typings";
 
 export default {
     name: "ping",
     description: "Ping pong",
+    type: TSlashCommandType.INFO,
     data: new SlashCommandBuilder(),
     run: async (client, interaction) => {
         const ping = client.ws.ping;

@@ -11,6 +11,11 @@ export interface TEvent<key extends events> {
 export interface TSlashCommand {
     name: string;
     description: string;
+    type: TSlashCommandType;
     data: SlashCommandBuilder;
     run: (client: NullClient, interaction: ChatInputCommandInteraction<'cached'>) => void;
+}
+
+export enum TSlashCommandType {
+    INFO = 'info',
 }
