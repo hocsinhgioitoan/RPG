@@ -2,8 +2,13 @@
 import { Client, GatewayIntentBits as intent, Colors } from "discord.js";
 import * as func from "../utils/functions";
 import { Database } from "quickmongo";
+import { readdirSync } from "fs";
+import { join } from "path";
+import { TEvent, events } from "../typings";
 // Export Client
-export default class NullClient extends Client {
+export default class NullClient<
+    Ready extends boolean = boolean
+> extends Client<Ready> {
     funcs: typeof func = func;
     db!: Database;
     constructor() {
@@ -12,18 +17,30 @@ export default class NullClient extends Client {
         });
     }
 
-    async  build(token?: string) {
+    async build(token?: string) {
         await this.loadDatabase();
-        this.login(token).catch(() => {
-            return this.funcs.sendWH({
-                embeds: [
-                    {
-                        description: "Token lỗi vui lòng kiểm tra",
-                        color: Colors.Red,
-                    },
-                ],
+        await this.loadEvents();
+        this.login(token)
+            .catch(() => {
+                return this.funcs.sendWH({
+                    embeds: [
+                        {
+                            description: "Token lỗi vui lòng kiểm tra",
+                            color: Colors.Red,
+                        },
+                    ],
+                });
+            })
+            .then(() => {
+                return this.funcs.sendWH({
+                    embeds: [
+                        {
+                            description: "Đăng nhập thành công",
+                            color: Colors.Green,
+                        },
+                    ],
+                });
             });
-        });
     }
 
     async loadDatabase() {
@@ -51,6 +68,21 @@ export default class NullClient extends Client {
         });
 
         db.connect();
-        return true
+        return true;
+    }
+
+    async loadEvents() {
+        const events = readdirSync(join(__dirname, "..", "Events"));
+        for (const event of events) {
+            const { default: Event }: { default: TEvent<events> } =
+                await import(join(__dirname, "..", "Events", event));
+            this[Event.once ? "once" : "on"](
+                Event.name,
+                Event.run.bind(null, this)
+            );
+            console.log(`Loaded ${Event.name} event`);
+        }
+        console.log("Done loading events!");
+        return true;
     }
 }
