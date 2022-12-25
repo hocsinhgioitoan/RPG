@@ -39,8 +39,12 @@ export default {
                 }),
             })
             .setTitle("Tin mới");
-        if (message?.embeds?.length || 0 > 0) {emb = EmbedBuilder.from(message?.embeds[0]!);}
-        else {emb = _emb.setDescription(fixedContent || "Không có tin mới");}
+        if (message?.embeds?.length || (0 > 0 && message?.embeds[0])) {
+            emb = EmbedBuilder.from(message?.embeds[0]);
+        }
+        else {
+            emb = _emb.setDescription(fixedContent || "Không có tin mới");
+        }
         if (focusedOption) {
             const cmd = client.commands.get(focusedOption);
             if (!cmd) {
@@ -125,13 +129,13 @@ export default {
                         _cmd.type.includes(cmd || ""),
                 )
 
-                .map((cmd) => {
+                .map((command) => {
                     return {
-                        name: cmd.name,
-                        value: cmd.name,
+                        name: command.name,
+                        value: command.name,
                     };
                 })
-                .filter((cmd, i) => i < 25),
+                .filter((_, i) => i < 25),
         );
     },
 } as TSlashCommand;
