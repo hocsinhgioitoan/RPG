@@ -27,7 +27,7 @@ export default class NullClient extends Client {
     }
 
     async loadDatabase() {
-        const db = new Database(process.env.mongo!);
+        const db = new Database(process.env[`${process.env.mode}_mongo`]!);
         db.on("ready", (_db) => {
             this.funcs.sendWH({
                 embeds: [
