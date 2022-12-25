@@ -5,7 +5,6 @@ import {
     Colors,
     Collection,
     Interaction,
-    ApplicationCommandPermissionType,
 } from "discord.js";
 import * as func from "../utils/functions";
 import { Database } from "quickmongo";
@@ -22,12 +21,12 @@ export default class NullClient<
     commands: Collection<string, TSlashCommand> = new Collection();
     interactions: Collection<string, TInteraction<Interaction>> =
         new Collection();
-    premium: Premium
+    premium: Premium;
     constructor() {
         super({
             intents: [intent.GuildMembers, intent.Guilds],
         });
-        this.premium = new Premium(this.db)
+        this.premium = new Premium(this.db);
     }
 
     async build(token?: string) {
@@ -43,8 +42,7 @@ export default class NullClient<
                         },
                     ],
                 });
-            })
-            .then(() => {});
+            });
     }
 
     async loadDatabase() {
@@ -68,13 +66,14 @@ export default class NullClient<
     }
 
     async loadEvents() {
+        // eslint-disable-next-line no-shadow
         const events = readdirSync(join(__dirname, "..", "Events"));
         for (const event of events) {
             const { default: Event }: { default: TEvent<events> } =
                 await import(join(__dirname, "..", "Events", event));
             this[Event.once ? "once" : "on"](
                 Event.name,
-                Event.run.bind(null, this)
+                Event.run.bind(null, this),
             );
             console.log(`Loaded ${Event.name} event`);
         }
@@ -86,7 +85,7 @@ export default class NullClient<
         const folders = readdirSync(join(__dirname, "..", "Commands"));
         for (const folder of folders) {
             const commands = readdirSync(
-                join(__dirname, "..", "Commands", folder)
+                join(__dirname, "..", "Commands", folder),
             );
             for (const command of commands) {
                 const { default: Command }: { default: TSlashCommand } =
@@ -110,8 +109,8 @@ export default class NullClient<
                     command.data
                         .setName(command.name)
                         .setDescription(command.description)
-                        .toJSON()
-                )
+                        .toJSON(),
+                ),
             );
         console.log("Done loading slash commands!");
         return true;
@@ -121,16 +120,17 @@ export default class NullClient<
         const folders = readdirSync(join(__dirname, "..", "Interactions"));
         for (const folder of folders) {
             const interactions = readdirSync(
-                join(__dirname, "..", "Interactions", folder)
+                join(__dirname, "..", "Interactions", folder),
             );
             for (const interaction of interactions) {
                 const {
-                    default: Interaction,
+                    // eslint-disable-next-line no-shadow
+                    default: _interaction,
                 }: { default: TInteraction<Interaction> } = await import(
                     join(__dirname, "..", "Interactions", folder, interaction)
                 );
-                this.interactions.set(Interaction.name, Interaction);
-                console.log(`Loaded ${Interaction.name} interaction`);
+                this.interactions.set(_interaction.name, _interaction);
+                console.log(`Loaded ${_interaction.name} interaction`);
             }
         }
         return true;

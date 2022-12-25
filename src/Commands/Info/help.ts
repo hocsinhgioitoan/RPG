@@ -16,7 +16,7 @@ export default {
         option
             .setName("cmd")
             .setDescription("Tên lệnh bạn muốn xem thông tin")
-            .setAutocomplete(true)
+            .setAutocomplete(true),
     ),
     run: async (client, interaction) => {
         const focusedOption = interaction.options.getString("cmd");
@@ -39,18 +39,18 @@ export default {
                 }),
             })
             .setTitle("Tin mới");
-        if (message?.embeds?.length || 0 > 0)
-            emb = EmbedBuilder.from(message?.embeds[0]!);
-        else emb = _emb.setDescription(fixedContent || "Không có tin mới");
+        if (message?.embeds?.length || 0 > 0) {emb = EmbedBuilder.from(message?.embeds[0]!);}
+        else {emb = _emb.setDescription(fixedContent || "Không có tin mới");}
         if (focusedOption) {
             const cmd = client.commands.get(focusedOption);
-            if (!cmd)
+            if (!cmd) {
                 return interaction.reply({
                     content: "Không tìm thấy lệnh này",
                     ephemeral: true,
                 });
+            }
             const apiCommand = await interaction.guild.commands.cache.find(
-                (c) => c.name === cmd.name
+                (c) => c.name === cmd.name,
             );
             const embed = new EmbedBuilder()
                 .setTitle(`Thông tin lệnh ${cmd.name}`)
@@ -62,7 +62,7 @@ export default {
                         name: "Lệnh",
                         value: `${chatInputApplicationCommandMention(
                             apiCommand?.name || "",
-                            apiCommand?.id || ""
+                            apiCommand?.id || "",
                         )}`,
                     },
                 ])
@@ -75,7 +75,8 @@ export default {
                 })
                 .setTimestamp();
             return interaction.reply({ embeds: [embed, emb] });
-        } else {
+        }
+        else {
             const listCommand = client.commands;
             const apiCommands = await interaction.guild.commands.fetch();
             const cates = Object.values(TSlashCommandType);
@@ -86,11 +87,11 @@ export default {
                 const value = cmds
                     .map((cmd) => {
                         const apiCommand = apiCommands.find(
-                            (c) => c.name === cmd.name
+                            (c) => c.name === cmd.name,
                         );
                         return `${chatInputApplicationCommandMention(
                             apiCommand?.name || "",
-                            apiCommand?.id || ""
+                            apiCommand?.id || "",
                         )}`;
                     })
                     .join(", ");
@@ -121,7 +122,7 @@ export default {
                         _cmd.type.startsWith(cmd || "") ||
                         _cmd.name.includes(cmd || "") ||
                         _cmd.description.includes(cmd || "") ||
-                        _cmd.type.includes(cmd || "")
+                        _cmd.type.includes(cmd || ""),
                 )
 
                 .map((cmd) => {
@@ -130,7 +131,7 @@ export default {
                         value: cmd.name,
                     };
                 })
-                .filter((cmd, i) => i < 25)
+                .filter((cmd, i) => i < 25),
         );
     },
 } as TSlashCommand;

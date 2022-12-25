@@ -5,7 +5,7 @@ import {
 } from "discord.js";
 
 export const sendWH = (
-    options: string | MessagePayload | WebhookCreateMessageOptions, link?: string
+    options: string | MessagePayload | WebhookCreateMessageOptions, link?: string,
 ) => {
     return new WebhookClient({
         url: link ? link : process.env[`${process.env.mode}_webhook`]!,

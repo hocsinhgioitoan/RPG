@@ -9,7 +9,7 @@ export default {
     data: new SlashCommandBuilder(),
     run: async (client, interaction) => {
         const announceChannel = client.channels.cache.get(
-            announceChannelId
+            announceChannelId,
         );
         if (!announceChannel?.isTextBased()) return;
         const messages = await announceChannel.messages.fetch({ limit: 1 });
@@ -22,11 +22,11 @@ export default {
                 embeds: [embedBuilder],
             });
         }
-        const fixedContent = message.content.replace(/@everyone/g, "@\u200beveryone").replace(/@here/g, "@\u200bhere")
+        const fixedContent = message.content.replace(/@everyone/g, "@\u200beveryone").replace(/@here/g, "@\u200bhere");
         // convert time to DD/MM/YYYY:HH:MM:SS by using new Date().toLocaleString()
-        const time = message.createdAt.toLocaleString()
+        const time = message.createdAt.toLocaleString();
         return await interaction.reply({
-            content: `[${message.author.username} (${time})]: \n`+fixedContent,
+            content: `[${message.author.username} (${time})]: \n` + fixedContent,
             files: message.attachments.map((attachment) => attachment.url),
         });
     },

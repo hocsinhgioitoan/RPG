@@ -13,5 +13,5 @@ export default {
             content: `Pong! Ping: ${ping}ms, Latency: ${latency}ms`,
             ephemeral: true,
         });
-    }
+    },
 } as TSlashCommand;

@@ -1,4 +1,3 @@
-import { Colors, EmbedBuilder } from "discord.js";
 import { TEvent } from "../typings";
 
 export default {
@@ -10,14 +9,16 @@ export default {
             if (!cmd) return;
             try {
                 await cmd.run(client, interaction);
-            } catch (error) {
+            }
+            catch (error) {
                 console.error(error);
                 await interaction.reply({
                     content: "Đã xảy ra lỗi khi thực thi lệnh này!",
                     ephemeral: true,
                 });
             }
-        } else if (interaction.isModalSubmit()) {
+        }
+        else if (interaction.isModalSubmit()) {
             if (!interaction.inCachedGuild()) return;
             const cmd = client.interactions.get(interaction.customId);
             if (!cmd) return;
@@ -31,13 +32,15 @@ export default {
                     ephemeral: true,
                 });
             }
-        } else if (interaction.isAutocomplete()) {
+        }
+        else if (interaction.isAutocomplete()) {
             if (!interaction.inCachedGuild()) return;
             const cmd = client.commands.get(interaction.commandName);
             if (!cmd) return;
             try {
                 await cmd.autocomplete?.(client, interaction);
-            } catch (error) {
+            }
+            catch (error) {
                 console.error(error);
             }
         }
