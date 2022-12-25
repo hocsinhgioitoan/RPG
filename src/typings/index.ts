@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, ClientEvents, SlashCommandBuilder} from "discord.js";
+import { ChatInputCommandInteraction, ClientEvents, ModalSubmitInteraction, SlashCommandBuilder} from "discord.js";
 import NullClient from '../Class/Client';
 
 export type events = keyof ClientEvents;
@@ -16,6 +16,10 @@ export interface TSlashCommand {
     run: (client: NullClient, interaction: ChatInputCommandInteraction<'cached'>) => void;
 }
 
+export interface TInteraction<T> {
+    name: string;
+    run: (client: NullClient, interaction: T) => void;
+}
 export enum TSlashCommandType {
     INFO = 'info',
     MISC = 'misc',

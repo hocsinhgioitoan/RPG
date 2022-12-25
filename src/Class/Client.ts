@@ -4,12 +4,13 @@ import {
     GatewayIntentBits as intent,
     Colors,
     Collection,
+    Interaction,
 } from "discord.js";
 import * as func from "../utils/functions";
 import { Database } from "quickmongo";
 import { readdirSync } from "fs";
 import { join } from "path";
-import { TEvent, TSlashCommand, events } from "../typings";
+import { TEvent, TInteraction, TSlashCommand, events } from "../typings";
 // Export Client
 export default class NullClient<
     Ready extends boolean = boolean
@@ -17,6 +18,7 @@ export default class NullClient<
     funcs: typeof func = func;
     db!: Database;
     commands: Collection<string, TSlashCommand> = new Collection();
+    interactions: Collection<string, TInteraction<Interaction>> = new Collection();
     constructor() {
         super({
             intents: [intent.GuildMembers, intent.Guilds],
@@ -126,4 +128,23 @@ export default class NullClient<
         console.log("Done loading slash commands!");
         return true;
     }
+
+    async loadInteractions() {
+        const folders = readdirSync(join(__dirname, "..", "Interactions"));
+        for (const folder of folders) {
+            const interactions = readdirSync(
+                join(__dirname, "..", "Interactions", folder)
+            );
+            for (const interaction of interactions) {
+                const { default: Interaction }: { default: TInteraction<Interaction> } =
+                    await import(
+                        join(__dirname, "..", "Interactions", folder, interaction)
+                    );
+                this.interactions.set(Interaction.name, Interaction);
+                console.log(`Loaded ${Interaction.name} interaction`);
+            }
+        }
+        return true;
+    }
+
 }

@@ -5,6 +5,7 @@ export default {
     once: true,
     run: async (client: NullClient<true>) => {
         await client.loadSlashCommands()
+        await client.loadInteractions()
         console.log(`Logged in as ${client.user?.tag}!`);
     }
 } as TEvent<"ready">;
