@@ -1,5 +1,12 @@
 import { TSlashCommand, TSlashCommandType } from "../../typings";
-import { EmbedBuilder, SlashCommandBuilder, Colors, chatInputApplicationCommandMention, EmbedField } from "discord.js";
+import {
+    EmbedBuilder,
+    SlashCommandBuilder,
+    Colors,
+    chatInputApplicationCommandMention,
+    EmbedField,
+} from "discord.js";
+import { announceChannelId } from "../../utils/constants";
 
 export default {
     name: "help",
@@ -13,6 +20,28 @@ export default {
     ),
     run: async (client, interaction) => {
         const focusedOption = interaction.options.getString("cmd");
+        // get new news for bot
+        const announceChannel = client.channels.cache.get(announceChannelId);
+        if (!announceChannel?.isTextBased()) return;
+        const messages = await announceChannel.messages.fetch({ limit: 1 });
+        const message = messages.first();
+        let emb: EmbedBuilder;
+        const fixedContent = message?.content
+            .replace(/@everyone/g, "@\u200beveryone")
+            .replace(/@here/g, "@\u200bhere");
+        const _emb = new EmbedBuilder()
+            .setColor(Colors.Aqua)
+            .setTimestamp()
+            .setAuthor({
+                name: message?.author.tag || "",
+                iconURL: message?.author.displayAvatarURL({
+                    forceStatic: true,
+                }),
+            })
+            .setTitle("Tin mới");
+        if (message?.embeds?.length ||0> 0) emb = EmbedBuilder.from(message?.embeds[0]!);
+        else emb = _emb.setDescription(fixedContent || "Không có tin mới");
+        console.log(emb)
         if (focusedOption) {
             const cmd = client.commands.get(focusedOption);
             if (!cmd)
@@ -20,15 +49,22 @@ export default {
                     content: "Không tìm thấy lệnh này",
                     ephemeral: true,
                 });
-            const apiCommand = await interaction.guild.commands.cache.find((c) => c.name === cmd.name);
-            console.log("🚀 ~ file: help.ts:24 ~ run: ~ apiCommand", apiCommand)
+            const apiCommand = await interaction.guild.commands.cache.find(
+                (c) => c.name === cmd.name
+            );
             const embed = new EmbedBuilder()
                 .setTitle(`Thông tin lệnh ${cmd.name}`)
                 .addFields([
                     { name: "Tên lệnh", value: cmd.name, inline: true },
                     { name: "Loại lệnh", value: cmd.type, inline: true },
                     { name: "Mô tả", value: cmd.description, inline: true },
-                    {name: "Lệnh", value: `${chatInputApplicationCommandMention(apiCommand?.name || "",apiCommand?.id || "")}`},
+                    {
+                        name: "Lệnh",
+                        value: `${chatInputApplicationCommandMention(
+                            apiCommand?.name || "",
+                            apiCommand?.id || ""
+                        )}`,
+                    },
                 ])
                 .setColor(Colors.Aqua)
                 .setAuthor({
@@ -38,9 +74,9 @@ export default {
                     }),
                 })
                 .setTimestamp();
-            return interaction.reply({ embeds: [embed] });
+            return interaction.reply({ embeds: [embed, emb] });
         } else {
-            const listCommand = client.commands
+            const listCommand = client.commands;
             const apiCommands = await interaction.guild.commands.fetch();
             const cates = Object.values(TSlashCommandType);
             const fields: EmbedField[] = [];
@@ -49,8 +85,13 @@ export default {
                 if (cmds.size === 0) continue;
                 const value = cmds
                     .map((cmd) => {
-                        const apiCommand = apiCommands.find((c) => c.name === cmd.name);
-                        return `${chatInputApplicationCommandMention(apiCommand?.name || "",apiCommand?.id || "")}`;
+                        const apiCommand = apiCommands.find(
+                            (c) => c.name === cmd.name
+                        );
+                        return `${chatInputApplicationCommandMention(
+                            apiCommand?.name || "",
+                            apiCommand?.id || ""
+                        )}`;
                     })
                     .join(", ");
                 fields.push({ name: cate, value, inline: false });
@@ -66,7 +107,7 @@ export default {
                     }),
                 })
                 .setTimestamp();
-            return interaction.reply({ embeds: [embed] });
+            return interaction.reply({ embeds: [embed, emb] });
         }
     },
     autocomplete: async (client, interaction) => {

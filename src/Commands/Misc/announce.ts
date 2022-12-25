@@ -1,5 +1,6 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { TSlashCommand, TSlashCommandType } from "../../typings";
+import { announceChannelId } from '../../utils/constants';
 
 export default {
     name: "announce",
@@ -8,7 +9,7 @@ export default {
     data: new SlashCommandBuilder(),
     run: async (client, interaction) => {
         const announceChannel = client.channels.cache.get(
-            "1053866353553059870"
+            announceChannelId
         );
         if (!announceChannel?.isTextBased()) return;
         const messages = await announceChannel.messages.fetch({ limit: 1 });
