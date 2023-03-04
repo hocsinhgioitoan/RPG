@@ -12,6 +12,7 @@ import { readdirSync } from "fs";
 import { join } from "path";
 import { TEvent, TInteraction, TSlashCommand, events } from "../typings";
 import { Premium } from './Premium';
+import { emojis } from '../utils/constants';
 // Export Client
 export default class NullClient<
     Ready extends boolean = boolean
@@ -22,13 +23,13 @@ export default class NullClient<
     interactions: Collection<string, TInteraction<Interaction>> =
         new Collection();
     premium: Premium;
+    emoji: typeof emojis = emojis;
     constructor() {
         super({
             intents: [intent.GuildMembers, intent.Guilds],
         });
         this.premium = new Premium(this.db);
     }
-
     async build(token?: string) {
         await this.loadDatabase();
         await this.loadEvents();
