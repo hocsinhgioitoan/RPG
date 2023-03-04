@@ -18,6 +18,7 @@ export interface TEvent<key extends events> {
 export enum TSlashCommandType {
     INFO = "info",
     MISC = "misc",
+    RPG = "rpg",
 }
 
 export interface TSlashCommand {

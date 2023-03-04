@@ -5,7 +5,7 @@ export class Premium {
     constructor(protected db: Database) {}
 
     async func(id: string, guildsOrUsers: "guilds" | "users") {
-        const data: plan = await this.db.get(`${guildsOrUsers}.${id}.premium`);
+        const data: Plan = await this.db.get(`${guildsOrUsers}.${id}.premium`);
         return {
             check: () => {
                 if (!data) return false;
@@ -26,7 +26,7 @@ export class Premium {
     }
 
 
-    patchData(data: plan) {
+    patchData(data: Plan) {
         return {
             type: data.type,
             date: data.date,
@@ -35,7 +35,7 @@ export class Premium {
 
 }
 
-interface plan {
+interface Plan {
     type: string;
     date: number;
 }

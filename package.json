@@ -10,11 +10,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "common-tags": "^1.8.2",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
-    "quickmongo": "^5.2.0"
+    "lodash.clonedeep": "^4.5.0",
+    "quickmongo": "^5.2.0",
+    "random-js": "^2.1.0"
   },
   "devDependencies": {
+    "@types/common-tags": "^1.8.1",
+    "@types/lodash.clonedeep": "^4.5.7",
     "@types/node": "^16.18.1",
     "@typescript-eslint/eslint-plugin": "^5.46.1",
     "@typescript-eslint/parser": "^5.46.1",
