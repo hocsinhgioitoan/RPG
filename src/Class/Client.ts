@@ -11,8 +11,8 @@ import { Database } from "quickmongo";
 import { readdirSync } from "fs";
 import { join } from "path";
 import { TEvent, TInteraction, TSlashCommand, events } from "../typings";
-import { Premium } from './Premium';
-import { emojis } from '../utils/constants';
+import { Premium } from "./Premium";
+import { emojis } from "../utils/constants";
 // Export Client
 export default class NullClient<
     Ready extends boolean = boolean
@@ -27,23 +27,30 @@ export default class NullClient<
     constructor() {
         super({
             intents: [intent.GuildMembers, intent.Guilds],
+            presence: {
+                activities: [
+                    {
+                        name: "booting...",
+                    },
+                ],
+                status: "dnd",
+            },
         });
         this.premium = new Premium(this.db);
     }
     async build(token?: string) {
         await this.loadDatabase();
         await this.loadEvents();
-        this.login(token)
-            .catch(() => {
-                return this.funcs.sendWH({
-                    embeds: [
-                        {
-                            description: "Token lỗi vui lòng kiểm tra",
-                            color: Colors.Red,
-                        },
-                    ],
-                });
+        this.login(token).catch(() => {
+            return this.funcs.sendWH({
+                embeds: [
+                    {
+                        description: "Token lỗi vui lòng kiểm tra",
+                        color: Colors.Red,
+                    },
+                ],
             });
+        });
     }
 
     async loadDatabase() {

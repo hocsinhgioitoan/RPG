@@ -13,6 +13,7 @@
     "common-tags": "^1.8.2",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
+    "lodash": "^4.17.21",
     "lodash.clonedeep": "^4.5.0",
     "quickmongo": "^5.2.0",
     "random-js": "^2.1.0"

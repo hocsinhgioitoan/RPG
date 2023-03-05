@@ -1,3 +1,4 @@
+export { Inventory } from './Inventory';
 export { Armor } from "./Armor";
 export { Battle } from "./Battle";
 export { Fighter } from "./Fighter";

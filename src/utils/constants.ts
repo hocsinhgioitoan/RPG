@@ -5,3 +5,12 @@ export const emojis = {
     critical: ":boom:",
     attack: ":crossed_swords:",
 };
+
+export const itemInMenu = [
+    {
+        name: "Info",
+        emoji: "📋",
+    },
+];
+
+export const smallNum = ["⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"];
