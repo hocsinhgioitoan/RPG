@@ -99,12 +99,12 @@ export class Fighter extends Base {
                 { name: "Tên", value: this.name },
                 {
                     name: "Chỉ số",
-                    value: `${emojis.attack} ${inlineCode(
-                        this.attack.toString()
-                    )} ${emojis.shield} ${inlineCode(armor)} ${
-                        emojis.critical
-                    } ${inlineCode(critChance)} ${emojis.health} ${inlineCode(
+                    value: `${emojis.health} ${inlineCode(
                         this.hp.toString()
+                    )} ${emojis.attack} ${inlineCode(this.attack.toString())} ${
+                        emojis.shield
+                    } ${inlineCode(armor)} ${emojis.critical} ${inlineCode(
+                        critChance
                     )}
                     `,
                 },
