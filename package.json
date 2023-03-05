@@ -1,7 +1,6 @@
 {
   "name": "rpg",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -26,5 +25,14 @@
     "@typescript-eslint/parser": "^5.46.1",
     "eslint": "^8.30.0",
     "typescript": "^4.9.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hocsinhgioitoan/RPG.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hocsinhgioitoan/RPG/issues"
+  },
+  "homepage": "https://github.com/hocsinhgioitoan/RPG#readme",
+  "description": ""
 }
