@@ -13,6 +13,7 @@ export class BaseFighter extends Fighter {
         skill,
         pet,
         imageUrl,
+        hasPremium: havePremium,
     }: TPlayerData) {
         super(name);
         super.hp = hp;
@@ -25,5 +26,6 @@ export class BaseFighter extends Fighter {
         super.skill = skill;
         super.pet = pet;
         super.imageUrl = imageUrl;
+        super.havePremium = havePremium;
     }
 }

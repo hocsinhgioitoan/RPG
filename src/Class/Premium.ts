@@ -4,7 +4,7 @@ export class Premium {
     // eslint-disable-next-line no-empty-function
     constructor(protected db: Database) {}
 
-    async func(id: string, guildsOrUsers: "guilds" | "users") {
+    async func(id: string, guildsOrUsers: "guild" | "user") {
         const data: Plan = await this.db.get(`${guildsOrUsers}.${id}.premium`);
         return {
             check: () => {
@@ -14,8 +14,8 @@ export class Premium {
             set: async (type: string, date: number) => {
                 await this.db.set(`${guildsOrUsers}.${id}.premium`, {
                     type,
-                    date,
-                }, Date.now() - date);
+                    date: Date.now() + date,
+                }, date);
             },
             extend: async (date: number) => {
                 await this.db.set(`${guildsOrUsers}.${id}.premium`, {

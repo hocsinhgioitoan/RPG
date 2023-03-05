@@ -51,6 +51,7 @@ export class Fighter extends Base {
     /** Image to represent this Fighter */
     imageUrl?: string;
 
+    havePremium = false;
     constructor(name: string) {
         super();
         this.name = name;
@@ -99,11 +100,11 @@ export class Fighter extends Base {
                 {
                     name: "Chỉ số",
                     value: `${emojis.attack} ${inlineCode(
-                        this.attack.toString(),
+                        this.attack.toString()
                     )} ${emojis.shield} ${inlineCode(armor)} ${
                         emojis.critical
                     } ${inlineCode(critChance)} ${emojis.health} ${inlineCode(
-                        this.hp.toString(),
+                        this.hp.toString()
                     )}
                     `,
                 },
@@ -115,6 +116,7 @@ export class Fighter extends Base {
                 { name: "Thú cưng", value: this.pet?.name || none },
                 { name: "Giáp", value: armorList || none, inline: true },
                 { name: "Vũ khí", value: weaponList || none, inline: true },
+                { name: "Premium", value: this.havePremium ? "Có" : "Không" },
             ]);
 
         if (this.imageUrl) embed.setThumbnail(this.imageUrl);

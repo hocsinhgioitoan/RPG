@@ -14,6 +14,7 @@ export interface TPlayerData {
     skill?: Skill;
     pet?: Pet;
     imageUrl?: string;
+    hasPremium?: boolean;
 }
 
 export interface TItemData {
