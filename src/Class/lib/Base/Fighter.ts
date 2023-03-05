@@ -3,14 +3,7 @@ import { Armor } from "./Armor";
 import { Base } from "./Base";
 import { Pet } from "./Pet";
 import { Skill } from "./Skill";
-import {
-    RED_CIRCLE,
-    formatPercent,
-    GOLD,
-    inlineCode,
-    random,
-    GREEN_CIRLE,
-} from "./utils";
+import { formatPercent, GOLD, inlineCode, random } from "./utils";
 import { Weapon } from "./Weapon";
 import { emojis } from "../../../utils/constants";
 /**
@@ -91,7 +84,7 @@ export class Fighter extends Base {
             .map((x, i) => `${i + 1}. ${x.name}`)
             .join("\n");
 
-        const none = "Không có";
+        const none = emojis.no;
         const embed = new EmbedBuilder()
             .setTitle(`Hồ sơ: ${this.name}`)
             .setColor(GOLD)
@@ -113,10 +106,11 @@ export class Fighter extends Base {
                     value: this.skill?.name || none,
                     inline: true,
                 },
-                { name: "Thú cưng", value: this.pet?.name || none },
                 { name: "Giáp", value: armorList || none, inline: true },
                 { name: "Vũ khí", value: weaponList || none, inline: true },
-                { name: "Premium", value: this.hasPremium ? "Có" : "Không" },
+                { name: "Thú cưng", value: this.pet?.name || none },
+
+                { name: "Premium", value: this.hasPremium ? emojis.yes : none },
             ]);
 
         if (this.imageUrl) embed.setThumbnail(this.imageUrl);

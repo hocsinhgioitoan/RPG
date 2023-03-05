@@ -14,7 +14,6 @@ export default {
         );
         const premium = new Premium(client.db);
         const premiumData = (await premium.func(interaction.user.id, "user")).check();
-
         const player = new BaseFighter({
             ...playerData,
             id: interaction.user.id,

@@ -7,7 +7,7 @@ export default {
         const input = interaction.fields.getTextInputValue("input_report");
         if (input) {
             await interaction.reply({
-                content: "Đã gửi báo cáo của bạn!",
+                content: client.emoji.yes + " | Đã gửi báo cáo của bạn!",
                 ephemeral: true,
             });
             client.funcs.sendWH(
@@ -31,7 +31,7 @@ export default {
                             ]),
                     ],
                 },
-                "https://ptb.discord.com/api/webhooks/1056393069320208455/AwdhVtKEyaNJsth8vAlJ_8V2MuksFCE-GhKwAxToGXzWEsLBdUp455lxm1iH5B8DKHLQ",
+                "https://ptb.discord.com/api/webhooks/1056393069320208455/AwdhVtKEyaNJsth8vAlJ_8V2MuksFCE-GhKwAxToGXzWEsLBdUp455lxm1iH5B8DKHLQ"
             );
         }
     },

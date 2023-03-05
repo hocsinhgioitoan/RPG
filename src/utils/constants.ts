@@ -4,6 +4,8 @@ export const emojis = {
     shield: ":shield:",
     critical: ":boom:",
     attack: ":crossed_swords:",
+    no: "<:no:1081957915465879573>",
+    yes: "<:yes:1081957912060121169>",
 };
 
 export const itemInMenu = [
