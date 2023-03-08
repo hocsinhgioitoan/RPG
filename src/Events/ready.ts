@@ -12,7 +12,7 @@ export default {
         client.user?.setPresence({
             activities: [
                 {
-                    name: "/menu",
+                    name: "/help",
                     type: ActivityType.Listening,
                 },
             ],
