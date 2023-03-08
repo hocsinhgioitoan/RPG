@@ -4,6 +4,7 @@ import { TItemData } from "../types";
 import _ from "lodash";
 import { padNumber, covertToSmallNumber } from "../../../utils/functions";
 import { Items } from "../Constants/Items";
+import { emojis } from "../../../utils/constants";
 export abstract class BaseInventory extends Base {
     abstract data: TItemData[];
     show() {
@@ -23,7 +24,7 @@ export abstract class BaseInventory extends Base {
                         return `\`${padNumber(
                             y.id,
                             biggestID.toString().length
-                        )}\` ${item.emoji ?? "❓"} ${covertToSmallNumber(
+                        )}\` ${item.emoji ?? emojis.unknown} ${covertToSmallNumber(
                             y.amount,
                             biggestAmount.toString().length
                         )}`;

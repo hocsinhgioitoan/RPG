@@ -16,7 +16,7 @@ export default {
         option
             .setName("cmd")
             .setDescription("Tên lệnh bạn muốn xem thông tin")
-            .setAutocomplete(true),
+            .setAutocomplete(true)
     ),
     run: async (client, interaction) => {
         const focusedOption = interaction.options.getString("cmd");
@@ -41,8 +41,7 @@ export default {
             .setTitle("Tin mới");
         if (message?.embeds?.length || (0 > 0 && message?.embeds[0])) {
             emb = EmbedBuilder.from(message?.embeds[0]);
-        }
-        else {
+        } else {
             emb = _emb.setDescription(fixedContent || "Không có tin mới");
         }
         if (focusedOption) {
@@ -54,7 +53,7 @@ export default {
                 });
             }
             const apiCommand = await interaction.guild.commands.cache.find(
-                (c) => c.name === cmd.name,
+                (c) => c.name === cmd.name
             );
             const embed = new EmbedBuilder()
                 .setTitle(`Thông tin lệnh ${cmd.name}`)
@@ -66,7 +65,7 @@ export default {
                         name: "Lệnh",
                         value: `${chatInputApplicationCommandMention(
                             apiCommand?.name || "",
-                            apiCommand?.id || "",
+                            apiCommand?.id || ""
                         )}`,
                     },
                 ])
@@ -79,8 +78,7 @@ export default {
                 })
                 .setTimestamp();
             return interaction.reply({ embeds: [embed, emb] });
-        }
-        else {
+        } else {
             const listCommand = client.commands;
             const apiCommands = await interaction.guild.commands.fetch();
             const cates = Object.values(TSlashCommandType);
@@ -91,15 +89,28 @@ export default {
                 const value = cmds
                     .map((cmd) => {
                         const apiCommand = apiCommands.find(
-                            (c) => c.name === cmd.name,
+                            (c) => c.name === cmd.name
                         );
                         return `${chatInputApplicationCommandMention(
                             apiCommand?.name || "",
-                            apiCommand?.id || "",
+                            apiCommand?.id || ""
                         )}`;
                     })
                     .join(", ");
-                fields.push({ name: cate, value, inline: false });
+                const nameField = `${cate[0].toUpperCase()}${cate.slice(1)}`;
+                const listEmoji = {
+                    ...client.emoji,
+                    rpg: client.emoji.diamond,
+                    misc: client.emoji.developer,
+                };
+                fields.push({
+                    name: `${
+                        listEmoji[cate as keyof typeof listEmoji] ??
+                        client.emoji.unknown
+                    } ${nameField}`,
+                    value,
+                    inline: false,
+                });
             }
             const embed = new EmbedBuilder()
                 .setTitle("Danh sách lệnh")
@@ -126,7 +137,7 @@ export default {
                         _cmd.type.startsWith(cmd || "") ||
                         _cmd.name.includes(cmd || "") ||
                         _cmd.description.includes(cmd || "") ||
-                        _cmd.type.includes(cmd || ""),
+                        _cmd.type.includes(cmd || "")
                 )
 
                 .map((command) => {
@@ -135,7 +146,7 @@ export default {
                         value: command.name,
                     };
                 })
-                .filter((_, i) => i < 25),
+                .filter((_, i) => i < 25)
         );
     },
 } as TSlashCommand;

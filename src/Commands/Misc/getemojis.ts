@@ -4,7 +4,7 @@ import {
     ButtonInteraction,
     ButtonStyle,
     ComponentType,
-    InteractionResponse,
+    Message,
     SlashCommandBuilder,
 } from "discord.js";
 import { TSlashCommand, TSlashCommandType } from "../../typings";
@@ -15,16 +15,16 @@ export default {
     type: TSlashCommandType.MISC,
     data: new SlashCommandBuilder(),
     async run(client, interaction) {
-        const emojis = client.guilds.cache
-            .get(interaction.guildId)
-            ?.emojis.cache.map((e) => {
-                const _e = e.toString();
-                return `${_e} - \`${_e}\``;
-            });
+        await interaction.deferReply({ ephemeral: true });
+        const emojis = (
+            await client.guilds.cache.get(interaction.guildId)?.emojis.fetch()
+        )?.map((e) => {
+            const _e = e.toString();
+            return `${_e} - \`${_e}\``;
+        });
         if (!emojis) {
-            return interaction.reply({
+            return interaction.editReply({
                 content: "No emojis found",
-                ephemeral: true,
             });
         }
         const pages = new Pagination(interaction, {
@@ -43,8 +43,8 @@ export default {
             ],
             ExtraRowPosition.Below
         );
-        const i = await pages.reply();
-        if (i instanceof InteractionResponse<true>) {
+        const i = await pages.editReply();
+        if (i instanceof Message) {
             // eslint-disable-next-line no-shadow
             const filter = (i: ButtonInteraction) =>
                 i.customId === "getallemojis_tojson";
@@ -56,7 +56,6 @@ export default {
 
             collector.on("collect", async (_i) => {
                 if (_i.customId === "getallemojis_tojson") {
-                    await _i.deferUpdate();
                     const emojiMap = emojis.map((e) => {
                         const _emoji = e.split(" - ")[0];
                         return {
@@ -65,7 +64,7 @@ export default {
                         };
                     });
                     // [<:abc:id>] -> {abc: "<:abc:id>"}
-                    await _i.editReply({
+                    await _i.update ({
                         content: `\`\`\`json\n${JSON.stringify(
                             Object.fromEntries(
                                 emojiMap.map((e) => [e.name, e.emoji])
