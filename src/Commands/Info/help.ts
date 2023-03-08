@@ -7,6 +7,7 @@ import {
     EmbedField,
 } from "discord.js";
 import { announceChannelId } from "../../utils/constants";
+import _ from "lodash";
 
 export default {
     name: "help",
@@ -97,7 +98,7 @@ export default {
                         )}`;
                     })
                     .join(", ");
-                const nameField = `${cate[0].toUpperCase()}${cate.slice(1)}`;
+                const nameField = _.capitalize(cate);
                 const listEmoji = {
                     ...client.emoji,
                     rpg: client.emoji.diamond,
@@ -146,7 +147,7 @@ export default {
                         value: command.name,
                     };
                 })
-                .filter((_, i) => i < 25)
+                .filter((_a, i) => i < 25)
         );
     },
 } as TSlashCommand;
