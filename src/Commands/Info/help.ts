@@ -43,13 +43,15 @@ export default {
         if (message?.embeds?.length || (0 > 0 && message?.embeds[0])) {
             emb = EmbedBuilder.from(message?.embeds[0]);
         } else {
-            emb = _emb.setDescription(fixedContent || "Không có tin mới");
+            emb = _emb.setDescription(
+                fixedContent || `${client.emoji.no} Không có tin mới`
+            );
         }
         if (focusedOption) {
             const cmd = client.commands.get(focusedOption);
             if (!cmd) {
                 return interaction.reply({
-                    content: "Không tìm thấy lệnh này",
+                    content: `${client.emoji.no} Không tìm thấy lệnh này`,
                     ephemeral: true,
                 });
             }
@@ -57,7 +59,7 @@ export default {
                 (c) => c.name === cmd.name
             );
             const embed = new EmbedBuilder()
-                .setTitle(`Thông tin lệnh ${cmd.name}`)
+                .setTitle(`${client.emoji.info} Thông tin lệnh ${cmd.name}`)
                 .addFields([
                     { name: "Tên lệnh", value: cmd.name, inline: true },
                     { name: "Loại lệnh", value: cmd.type, inline: true },
@@ -114,7 +116,7 @@ export default {
                 });
             }
             const embed = new EmbedBuilder()
-                .setTitle("Danh sách lệnh")
+                .setTitle("Danh sách lệnh của bot")
                 .addFields(fields)
                 .setColor(Colors.Aqua)
                 .setAuthor({

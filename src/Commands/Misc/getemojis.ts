@@ -24,7 +24,7 @@ export default {
         });
         if (!emojis) {
             return interaction.editReply({
-                content: "No emojis found",
+                content: `${client.emoji.no} No emojis found`,
             });
         }
         const pages = new Pagination(interaction, {
@@ -64,7 +64,7 @@ export default {
                         };
                     });
                     // [<:abc:id>] -> {abc: "<:abc:id>"}
-                    await _i.update ({
+                    await _i.update({
                         content: `\`\`\`json\n${JSON.stringify(
                             Object.fromEntries(
                                 emojiMap.map((e) => [e.name, e.emoji])
