@@ -1,5 +1,4 @@
 import { Inventory } from "../../Class/lib";
-import { TItemData } from "../../Class/lib/types";
 import { TSlashCommand, TSlashCommandType } from "../../typings";
 import { SlashCommandBuilder } from "discord.js";
 
@@ -14,7 +13,7 @@ export default {
         // );
         const inventory = new Inventory([
             {
-                id: 1,
+                id: 1000,
                 amount: 100,
             },
             {

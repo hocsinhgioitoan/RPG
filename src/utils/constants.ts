@@ -12,6 +12,9 @@ export const emojis = {
     profile: "<:profile:1083040748431229059>",
     info: "<:info:1083040791133433967>",
     developer: "<:developer:1083045481883639858>",
+    wood: "<:wood:1083762298721673237>",
+    stone: "<:stone:1083763100379005070>",
+    stick: "<:stick:1083763965127036960>",
 };
 
 export const itemInMenu = [

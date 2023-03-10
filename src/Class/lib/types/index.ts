@@ -32,13 +32,22 @@ export interface TItem {
     type: EItemTypes | string;
     rarity: ERarities | string;
     stats: TItemStats;
-    emoji?: EmojiResolvable
+    emoji?: EmojiResolvable;
+    id: number;
+    craft: {
+        canCraft: boolean;
+        materials?: {
+            id: number;
+            amount: number;
+        }[];
+    };
 }
 
 // eslint-disable-next-line no-shadow
 export enum EItemTypes {
     WEAPON = "weapon",
     ARMOR = "armor",
+    MATERIAL = "material",
 }
 
 // eslint-disable-next-line no-shadow

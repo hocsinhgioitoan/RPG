@@ -23,7 +23,7 @@ export default {
             return `${_e} - \`${_e}\``;
         });
         if (!emojis) {
-            return interaction.editReply({
+            return interaction.followUp({
                 content: `${client.emoji.no} No emojis found`,
             });
         }
@@ -43,7 +43,7 @@ export default {
             ],
             ExtraRowPosition.Below
         );
-        const i = await pages.editReply();
+        const i = await pages.followUp();
         if (i instanceof Message) {
             // eslint-disable-next-line no-shadow
             const filter = (i: ButtonInteraction) =>
