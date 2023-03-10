@@ -70,13 +70,3 @@ export abstract class BaseInventory extends Base {
         }
     }
 }
-
-export class Inventory extends BaseInventory {
-    data: TItemData[];
-    name = "Inventory";
-    id = "inventory";
-    constructor(data: TItemData[]) {
-        super();
-        this.data = data;
-    }
-}

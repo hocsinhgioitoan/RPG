@@ -1,4 +1,4 @@
-export { Inventory } from './Inventory';
+export { BaseInventory } from './BaseInventory';
 export { Armor } from "./Armor";
 export { Battle } from "./Battle";
 export { Fighter } from "./Fighter";
