@@ -8,9 +8,10 @@ export enum MaterialIDs {
 }
 // eslint-disable-next-line no-shadow
 export enum ItemIDs {
-    WOODEN_SWORD = 1,
-    PLANK = 2,
-    STICK = 3,
+    PLANK = 1,
+    STICK = 2,
+    WOOD = 3,
+    WOODEN_SWORD = 2000,
 }
 
 export const Materials: {
@@ -47,6 +48,15 @@ export const Materials: {
 
 
 export const Items: TItems = {
+    [ItemIDs.WOOD]: {
+        ...Materials[MaterialIDs.WOOD],
+        stats: {},
+        craft: {
+            canCraft: false,
+        },
+        emoji: emojis.wood,
+    },
+
     [ItemIDs.PLANK]: {
         ...Materials[MaterialIDs.PLANK],
         stats: {},
