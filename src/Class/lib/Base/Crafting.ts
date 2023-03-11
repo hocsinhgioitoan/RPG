@@ -24,7 +24,7 @@ export abstract class CraftItem extends Base {
             for (const require of item.craft.materials) {
                 inventory.removeItem(require.id, require.amount);
             }
-            return inventory.addItem(item.id, 1);
+            return inventory.addItem(item.id, item.craft.amout ?? 1);
         }
         return false;
     }
@@ -46,7 +46,12 @@ export abstract class CraftItem extends Base {
         );
         return {
             name: `${
-                emojis[item.name as keyof typeof emojis] ?? emojis.unknown
+                emojis[
+                    item.name
+                        .split(" ")
+                        .join("_")
+                        .toLowerCase() as keyof typeof emojis
+                ] ?? emojis.unknown
             } ${item.name}`,
             value: `Yêu cầu: ${item.craft.materials
                 ?.map(

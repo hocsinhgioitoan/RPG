@@ -40,6 +40,7 @@ export interface TItem {
             id: number;
             amount: number;
         }[];
+        amout?: number;
     };
 }
 

@@ -8,23 +8,28 @@ import { emojis } from "../../../utils/constants";
 export abstract class BaseInventory extends Base {
     abstract data: TItemData[];
     show() {
+        this.data = this.data ?? [];
         const embed = new EmbedBuilder()
             .setTimestamp()
             .setTitle("Inventory")
             .setColor(Colors.Blue);
         const items = _.chunk(this.data, 5);
-        const biggestID = Math.max(...this.data.map((x) => x.id));
-        const biggestAmount = Math.max(...this.data.map((x) => x.amount));
+        const biggestID = Math.max(...this.data.map((x) => x.id)) ?? 0;
+        const biggestAmount = Math.max(...this.data.map((x) => x.amount)) ?? 0;
         const str = items
             .map((x) => {
                 return x
                     .map((y) => {
-                        const item = Items[y.id];
+                        const item = Object.values(Items).find(
+                            (_x) => _x.id === y.id
+                        );
                         if (!item) return "";
                         return `\`${padNumber(
                             y.id,
                             biggestID.toString().length
-                        )}\` ${item.emoji ?? emojis.unknown} ${covertToSmallNumber(
+                        )}\` ${
+                            item.emoji ?? emojis[item.name as keyof typeof emojis] ?? emojis.unknown
+                        } ${covertToSmallNumber(
                             y.amount,
                             biggestAmount.toString().length
                         )}`;
@@ -52,10 +57,8 @@ export abstract class BaseInventory extends Base {
                 return;
             }
         }
-        this.data.push({
-            id,
-            amount,
-        });
+        this.data.push({ id, amount });
+        return this.data;
     }
 
     removeItem(id: number, amount: number) {
@@ -68,5 +71,6 @@ export abstract class BaseInventory extends Base {
                 return;
             }
         }
+        return this.data;
     }
 }
