@@ -8,8 +8,8 @@ import { covertToSmallNumber } from "../../../utils/functions";
 import _ from "lodash";
 export abstract class CraftItem extends Base {
     canCraft(inventory: BaseInventory, item: TItem): boolean {
-        if (!item.craft.canCraft) return false;
-        if (!item.craft.materials) return false;
+        if (!item.craft?.canCraft) return false;
+        if (!item.craft?.materials) return false;
         for (const require of item.craft.materials) {
             if (inventory.getItemAmount(require.id) < require.amount) {
                 return false;
@@ -53,11 +53,11 @@ export abstract class CraftItem extends Base {
                     (material) =>
                         `${
                             emojis[
-                                Object.values(Materials).find(
-                                    (v) => {
+                                Object.values(Materials)
+                                    .find((v) => {
                                         return v.id === material.id;
-                                    }
-                                )?.name.toLowerCase() as keyof typeof emojis
+                                    })
+                                    ?.name.toLowerCase() as keyof typeof emojis
                             ] ?? emojis.unknown
                         }${covertToSmallNumber(
                             material.amount,
@@ -67,5 +67,9 @@ export abstract class CraftItem extends Base {
                 .join(" ")}`,
             inline: true,
         };
+    }
+
+    findItemByName(name: string) {
+        return Object.values(Items).find((item) => item.name === name);
     }
 }
