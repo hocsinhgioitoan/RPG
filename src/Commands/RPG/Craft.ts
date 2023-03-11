@@ -23,13 +23,7 @@ export default {
         const inventoryData = await client.db.get<TItemData[]>(
             `game.player.inventory.${interaction.user.id}`
         );
-        const inventory = new Inventory([
-            ...inventoryData ?? [],
-            {
-                id: 1000,
-                amount: 100,
-            },
-        ]);
+        const inventory = new Inventory(inventoryData ?? []);
         const [page, craft] = createPages(interaction, inventory);
         const i = await page.reply();
         if (!(i instanceof InteractionResponse<true>)) return;
@@ -51,7 +45,10 @@ export default {
                 const payloads = page2.ready();
                 const message = await i2.update(payloads);
                 page2.paginate(message);
-                await client.db.set(`game.player.inventory.${interaction.user.id}`, inventory.data);
+                await client.db.set(
+                    `game.player.inventory.${interaction.user.id}`,
+                    inventory.data
+                );
                 return;
             }
             i2.update({
@@ -69,7 +66,7 @@ function createPages(
 ): [Pagination, Craft] {
     const craft = new Craft();
     const items = craft.getListItems;
-    const fields = items.map((item) => craft.generateField(item));
+    const fields = items.map((item) => craft.generateField(item, inventory));
     const _fields = _.chunk(fields, 24);
     const embeds: EmbedBuilder[] = [];
     const buttons: ButtonBuilder[][] = [];
@@ -78,7 +75,7 @@ function createPages(
         embeds.push(embed);
         buttons.push(
             field.map((f) => {
-                const [emoji, ...name] = f.name.split(" ");
+                const [_emoji, emoji, ...name] = f.name.split(" ");
                 return new ButtonBuilder()
                     .setCustomId(`button_caft_item_${name.join(" ")}`)
                     .setEmoji(
@@ -106,7 +103,7 @@ function createPages(
         const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
         rows.push(row);
     }
-    embeds.splice(0, 1, craft.show());
+    embeds.splice(0, 1, craft.show(inventory));
     const page = new Pagination(interaction);
     page.addActionRows(rows);
     page.setEmbeds(embeds);

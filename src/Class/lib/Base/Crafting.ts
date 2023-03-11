@@ -6,9 +6,12 @@ import { Items, Materials } from "../Constants/Items";
 import { emojis } from "../../../utils/constants";
 import { covertToSmallNumber } from "../../../utils/functions";
 import _ from "lodash";
-export abstract class CraftItem extends Base {
+import { Inventory } from "../Extend/Inventory";
+export class CraftItem extends Base {
+    name = "Crafting";
+    id = "craft";
     canCraft(inventory: BaseInventory, item: TItem): boolean {
-        if (!item.craft?.canCraft) return false;
+        if (!item?.craft?.canCraft) return false;
         if (!item.craft?.materials) return false;
         for (const require of item.craft.materials) {
             if (inventory.getItemAmount(require.id) < require.amount) {
@@ -29,9 +32,12 @@ export abstract class CraftItem extends Base {
         return false;
     }
 
-    show() {
+    show(inventory?: Inventory) {
+        if (!inventory) {
+            return new EmbedBuilder().setDescription("No inventory");
+        }
         const list = this.getListItems;
-        const fields = list.map((item) => this.generateField(item));
+        const fields = list.map((item) => this.generateField(item, inventory));
         const embed = new EmbedBuilder().addFields(_.chunk(fields, 24)[0]);
         return embed;
     }
@@ -40,12 +46,12 @@ export abstract class CraftItem extends Base {
         return Object.values(Items).filter((item) => item.craft.canCraft);
     }
 
-    generateField(item: TItem) {
+    generateField(item: TItem, inventory: Inventory) {
         const biggestAmount = Math.max(
             ...(item.craft.materials?.map((material) => material.amount) ?? [])
         );
         return {
-            name: `${
+            name: `${this.canCraft(inventory, item) ? emojis.yes : emojis.no} ${
                 emojis[
                     item.name
                         .split(" ")
@@ -57,6 +63,10 @@ export abstract class CraftItem extends Base {
                 ?.map(
                     (material) =>
                         `${
+                            this.enoughMaterial(inventory, material)
+                                ? emojis.yes
+                                : emojis.no
+                        } ${
                             emojis[
                                 Object.values(Materials)
                                     .find((v) => {
@@ -76,5 +86,19 @@ export abstract class CraftItem extends Base {
 
     findItemByName(name: string) {
         return Object.values(Items).find((item) => item.name === name);
+    }
+
+    enoughMaterial(
+        inventory: BaseInventory,
+        material: {
+            id: number;
+            amount: number;
+        }
+    ) {
+        const items = inventory.data;
+        const item = items.find((_item) => _item.id === material.id);
+        if (!item) return false;
+        if (item.amount < material.amount) return false;
+        return true;
     }
 }
