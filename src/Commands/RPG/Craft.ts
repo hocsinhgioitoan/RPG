@@ -20,10 +20,15 @@ export default {
     type: TSlashCommandType.RPG,
     data: new SlashCommandBuilder(),
     async run(client, interaction) {
-        const inventoryData = await client.db.get<TItemData[]>(
-            `game.player.inventory.${interaction.user.id}`
-        );
-        const inventory = new Inventory(inventoryData ?? []);
+        // const inventoryData = await client.db.get<TItemData[]>(
+        //     `game.player.inventory.${interaction.user.id}`
+        // );
+        const inventory = new Inventory([
+            {
+                id: 1000,
+                amount: 100,
+            },
+        ]);
         const [page, craft] = createPages(interaction, inventory);
         const i = await page.reply();
         if (!(i instanceof InteractionResponse<true>)) return;
@@ -37,6 +42,7 @@ export default {
         });
         collector.on("collect", async (i2) => {
             const [, , , name] = i2.customId.split("_");
+            console.log(name)
             const item = craft.findItemByName(name);
             if (!item) return;
             if (craft.canCraft(inventory, item)) {
@@ -71,13 +77,18 @@ function createPages(
     const embeds: EmbedBuilder[] = [];
     const buttons: ButtonBuilder[][] = [];
     for (const field of _fields) {
-        const embed = new EmbedBuilder().addFields(field);
+        const embed = new EmbedBuilder().setDescription(field.join("\n"));
         embeds.push(embed);
         buttons.push(
             field.map((f) => {
-                const [_emoji, emoji, ...name] = f.name.split(" ");
+                // eslint-disable-next-line prefer-const
+                let [emoji, ...name] = f.split(" ");
+                name = name
+                    .filter((n) => !n.startsWith("<"))
+                    .map((n) => n.replace(":", ""));
+                const _name = name.join(" ").replace("| ", "");
                 return new ButtonBuilder()
-                    .setCustomId(`button_caft_item_${name.join(" ")}`)
+                    .setCustomId(`button_caft_item_${_name}`)
                     .setEmoji(
                         !emoji.startsWith("<")
                             ? emoji
@@ -92,7 +103,9 @@ function createPages(
                     .setDisabled(
                         !craft.canCraft(
                             inventory,
-                            craft.findItemByName(name.join(" "))!
+                            craft.findItemByName(
+                                _name
+                            )!
                         )
                     );
             })
