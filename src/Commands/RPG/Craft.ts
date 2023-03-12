@@ -42,7 +42,6 @@ export default {
         });
         collector.on("collect", async (i2) => {
             const [, , , name] = i2.customId.split("_");
-            console.log(name)
             const item = craft.findItemByName(name);
             if (!item) return;
             if (craft.canCraft(inventory, item)) {

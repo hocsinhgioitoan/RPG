@@ -38,7 +38,7 @@ export class CraftItem extends Base {
         }
         const list = this.getListItems;
         const fields = list.map((item) => this.generateField(item, inventory));
-        const embed = new EmbedBuilder().addFields(_.chunk(fields, 24)[0]);
+        const embed = new EmbedBuilder().setDescription(_.chunk(fields, 24)[0].join("\n"));
         return embed;
     }
 
@@ -50,38 +50,34 @@ export class CraftItem extends Base {
         const biggestAmount = Math.max(
             ...(item.craft.materials?.map((material) => material.amount) ?? [])
         );
-        return {
-            name: `${this.canCraft(inventory, item) ? emojis.yes : emojis.no} ${
-                emojis[
-                    item.name
-                        .split(" ")
-                        .join("_")
-                        .toLowerCase() as keyof typeof emojis
-                ] ?? emojis.unknown
-            } ${item.name}`,
-            value: `Yêu cầu: ${item.craft.materials
-                ?.map(
-                    (material) =>
-                        `${
-                            this.enoughMaterial(inventory, material)
-                                ? emojis.yes
-                                : emojis.no
-                        } ${
-                            emojis[
-                                Object.values(Materials)
-                                    .find((v) => {
-                                        return v.id === material.id;
-                                    })
-                                    ?.name.toLowerCase() as keyof typeof emojis
-                            ] ?? emojis.unknown
-                        }${covertToSmallNumber(
-                            material.amount,
-                            biggestAmount.toString().length
-                        )}`
-                )
-                .join(" ")}`,
-            inline: true,
-        };
+        return `${
+            emojis[
+                item.name
+                    .split(" ")
+                    .join("_")
+                    .toLowerCase() as keyof typeof emojis
+            ] ?? emojis.unknown
+        } ${item.name}: ${item.craft.materials
+            ?.map(
+                (material) =>
+                    `${
+                        this.enoughMaterial(inventory, material)
+                            ? emojis.yes
+                            : emojis.no
+                    } ${
+                        emojis[
+                            Object.values(Materials)
+                                .find((v) => {
+                                    return v.id === material.id;
+                                })
+                                ?.name.toLowerCase() as keyof typeof emojis
+                        ] ?? emojis.unknown
+                    }${covertToSmallNumber(
+                        material.amount,
+                        biggestAmount.toString().length
+                    )}`
+            )
+            .join(" ")}`;
     }
 
     findItemByName(name: string) {

@@ -6,7 +6,6 @@ import {
     chatInputApplicationCommandMention,
     EmbedField,
 } from "discord.js";
-import { announceChannelId } from "../../utils/constants";
 import _ from "lodash";
 
 export default {
@@ -21,32 +20,6 @@ export default {
     ),
     run: async (client, interaction) => {
         const focusedOption = interaction.options.getString("cmd");
-        // get new news for bot
-        const announceChannel = client.channels.cache.get(announceChannelId);
-        if (!announceChannel?.isTextBased()) return;
-        const messages = await announceChannel.messages.fetch({ limit: 1 });
-        const message = messages.first();
-        let emb: EmbedBuilder;
-        const fixedContent = message?.content
-            .replace(/@everyone/g, "@\u200beveryone")
-            .replace(/@here/g, "@\u200bhere");
-        const _emb = new EmbedBuilder()
-            .setColor(Colors.Aqua)
-            .setTimestamp()
-            .setAuthor({
-                name: message?.author.tag || "",
-                iconURL: message?.author.displayAvatarURL({
-                    forceStatic: true,
-                }),
-            })
-            .setTitle("Tin mới");
-        if (message?.embeds?.length || (0 > 0 && message?.embeds[0])) {
-            emb = EmbedBuilder.from(message?.embeds[0]);
-        } else {
-            emb = _emb.setDescription(
-                fixedContent || `${client.emoji.no} Không có tin mới`
-            );
-        }
         if (focusedOption) {
             const cmd = client.commands.get(focusedOption);
             if (!cmd) {
@@ -80,7 +53,7 @@ export default {
                     }),
                 })
                 .setTimestamp();
-            return interaction.reply({ embeds: [embed, emb] });
+            return interaction.reply({ embeds: [embed] });
         } else {
             const listCommand = client.commands;
             const apiCommands = await interaction.guild.commands.fetch();
@@ -126,7 +99,7 @@ export default {
                     }),
                 })
                 .setTimestamp();
-            return interaction.reply({ embeds: [embed, emb] });
+            return interaction.reply({ embeds: [embed] });
         }
     },
     autocomplete: async (client, interaction) => {

@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { ChannelType, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { TSlashCommand, TSlashCommandType } from "../../typings";
 import { announceChannelId } from "../../utils/constants";
 
@@ -9,7 +9,7 @@ export default {
     data: new SlashCommandBuilder(),
     run: async (client, interaction) => {
         const announceChannel = client.channels.cache.get(announceChannelId);
-        if (!announceChannel?.isTextBased()) return;
+        if (announceChannel?.type !== ChannelType.GuildAnnouncement) return;
         const messages = await announceChannel.messages.fetch({ limit: 1 });
         const message = messages.first();
         if (!message) {
