@@ -11,7 +11,14 @@ export default {
             try {
                 await cmd.run(client, interaction);
             } catch (error) {
+                console.log(1);
                 console.error(error);
+                if (interaction.replied) {
+                    return interaction.followUp({
+                        content: errorMessage,
+                        ephemeral: true,
+                    });
+                }
                 await interaction.reply({
                     content: errorMessage,
                     ephemeral: true,

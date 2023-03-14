@@ -80,10 +80,10 @@ export const Items: TItems = {
             materials: [
                 {
                     id: MaterialIDs.PLANK,
-                    amount: 1,
+                    amount: 2,
                 }
             ],
-            amout: 2,
+            amout: 4,
         },
         emoji: emojis.stick,
     },
@@ -91,7 +91,7 @@ export const Items: TItems = {
         id: ItemIDs.WOODEN_SWORD,
         name: "Wooden Sword",
         description: "A wooden sword",
-        type: EItemTypes.WEAPON,
+        type: EItemTypes.SWORD,
         rarity: ERarities.COMMON,
         stats: {
             attack: 1,

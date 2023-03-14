@@ -1,12 +1,14 @@
 import {
+    ButtonBuilder,
+    EmojiResolvable,
     MessagePayload,
     WebhookClient,
-    WebhookCreateMessageOptions,
+    WebhookMessageCreateOptions,
 } from "discord.js";
 import { smallNum } from "./constants";
 
 export const sendWH = (
-    options: string | MessagePayload | WebhookCreateMessageOptions,
+    options: string | MessagePayload | WebhookMessageCreateOptions,
     link?: string
 ) => {
     return new WebhookClient({
@@ -29,3 +31,20 @@ export const covertToSmallNumber = (count: number, digits: number) => {
     }
     return result;
 };
+
+export function disableButton(button: ButtonBuilder) {
+    const _b = ButtonBuilder.from(button);
+    _b.setDisabled(true);
+    return _b;
+}
+
+export function parseEmoji(emoji: EmojiResolvable) {
+    const match = (emoji as string).match(
+        /<?(?:(a):)?(\w{2,32}):(\d{17,19})?>?/
+    );
+    return {
+        animated: Boolean(match?.[1]),
+        name: match?.[2],
+        id: match?.[3],
+    };
+}

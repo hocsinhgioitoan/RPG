@@ -46,8 +46,10 @@ export interface TItem {
 
 // eslint-disable-next-line no-shadow
 export enum EItemTypes {
-    WEAPON = "weapon",
-    ARMOR = "armor",
+    SWORD = "sword",
+    PICKAXE = "pickaxe",
+    AXE = "axe",
+    SHOVEL = "shovel",
     MATERIAL = "material",
 }
 

@@ -17,6 +17,11 @@ export const emojis = {
     wood: "<:oak_wood:1083966553864798258>",
     plank: "<:oak_planks:1083966719552393257>",
     stick: "<:stick:1083967505170706482>",
+    b_: "<:b_:1084371543544565840>",
+    a_: "<:a_:1084371568630706238>",
+    wooden_axe: "<:wooden_axe:1084395871988351036>",
+    wooden_pickaxe: "<:wooden_pickaxe:1084396296342880346>",
+    wooden_shovel: "<:wooden_shovel:1084396357927837706>",
 };
 
 export const itemInMenu = [

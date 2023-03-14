@@ -2,43 +2,34 @@ import { Base } from "./Base";
 import { BaseInventory } from "./BaseInventory";
 import { TItem } from "../types/";
 import { EmbedBuilder } from "discord.js";
-import { Items, Materials } from "../Constants/Items";
-import { emojis } from "../../../utils/constants";
-import { covertToSmallNumber } from "../../../utils/functions";
-import _ from "lodash";
-import { Inventory } from "../Extend/Inventory";
+import { Items } from "../Constants/Items";
 export class CraftItem extends Base {
     name = "Crafting";
     id = "craft";
-    canCraft(inventory: BaseInventory, item: TItem): boolean {
+    canCraft(inventory: BaseInventory, item: TItem, amout = 1): boolean {
         if (!item?.craft?.canCraft) return false;
         if (!item.craft?.materials) return false;
-        for (const require of item.craft.materials) {
-            if (inventory.getItemAmount(require.id) < require.amount) {
-                return false;
-            }
+        if (amout > this.maxCraft(inventory, item)) return false;
+        for (const material of item.craft.materials) {
+            if (!this.enoughMaterial(inventory, material)) return false;
         }
         return true;
     }
 
-    craft(inventory: BaseInventory, item: TItem) {
-        if (this.canCraft(inventory, item)) {
-            if (!item.craft.materials) return false;
-            for (const require of item.craft.materials) {
-                inventory.removeItem(require.id, require.amount);
+    craft(inventory: BaseInventory, item: TItem, amout = 1) {
+        if (!item.craft?.materials) return false;
+        if (this.canCraft(inventory, item, amout)) {
+            for (const material of item.craft.materials) {
+                inventory.removeItem(material.id, material.amount * amout);
             }
-            return inventory.addItem(item.id, item.craft.amout ?? 1);
+            inventory.addItem(item.id, (item.craft?.amout ?? 1) * amout);
+            return true;
         }
         return false;
     }
 
-    show(inventory?: Inventory) {
-        if (!inventory) {
-            return new EmbedBuilder().setDescription("No inventory");
-        }
-        const list = this.getListItems;
-        const fields = list.map((item) => this.generateField(item, inventory));
-        const embed = new EmbedBuilder().setDescription(_.chunk(fields, 24)[0].join("\n"));
+    show() {
+        const embed = new EmbedBuilder();
         return embed;
     }
 
@@ -46,42 +37,12 @@ export class CraftItem extends Base {
         return Object.values(Items).filter((item) => item.craft.canCraft);
     }
 
-    generateField(item: TItem, inventory: Inventory) {
-        const biggestAmount = Math.max(
-            ...(item.craft.materials?.map((material) => material.amount) ?? [])
-        );
-        return `${
-            emojis[
-                item.name
-                    .split(" ")
-                    .join("_")
-                    .toLowerCase() as keyof typeof emojis
-            ] ?? emojis.unknown
-        } ${item.name}: ${item.craft.materials
-            ?.map(
-                (material) =>
-                    `${
-                        this.enoughMaterial(inventory, material)
-                            ? emojis.yes
-                            : emojis.no
-                    } ${
-                        emojis[
-                            Object.values(Materials)
-                                .find((v) => {
-                                    return v.id === material.id;
-                                })
-                                ?.name.toLowerCase() as keyof typeof emojis
-                        ] ?? emojis.unknown
-                    }${covertToSmallNumber(
-                        material.amount,
-                        biggestAmount.toString().length
-                    )}`
-            )
-            .join(" ")}`;
-    }
-
     findItemByName(name: string) {
         return Object.values(Items).find((item) => item.name === name);
+    }
+
+    findItemById(id: number) {
+        return Object.values(Items).find((item) => item.id === id);
     }
 
     enoughMaterial(
@@ -96,5 +57,19 @@ export class CraftItem extends Base {
         if (!item) return false;
         if (item.amount < material.amount) return false;
         return true;
+    }
+
+    maxCraft(inventory: BaseInventory, _item: TItem) {
+        if (!_item.craft.materials) return 0;
+        let max = Infinity;
+        for (const material of _item.craft.materials) {
+            const items = inventory.data;
+            const item = items.find((__item) => __item.id === material.id);
+            if (!item) return 0;
+            if (item.amount < material.amount) return 0;
+            const amount = Math.floor(item.amount / material.amount);
+            if (amount < max) max = amount;
+        }
+        return max;
     }
 }

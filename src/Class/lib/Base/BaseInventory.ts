@@ -54,9 +54,9 @@ export abstract class BaseInventory extends Base {
         for (const item of this.data) {
             if (item.id === id) {
                 item.amount += amount;
-                return;
             }
         }
+        if (this.data.find((x) => x.id === id)) return this.data;
         this.data.push({ id, amount });
         return this.data;
     }
